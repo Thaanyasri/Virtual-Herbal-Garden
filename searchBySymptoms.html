@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search by Symptoms - Virtual Herbal Garden</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background-image: url('https://media.istockphoto.com/id/475916925/photo/herb-garden.jpg?s=612x612&w=0&k=20&c=pXtdnTS0NFieEMixG8oiQcsd_4yDyJt6e-IRLGLVjfo='); /* Replace with your own image URL */
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #2c6b2f;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .info-container {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .info-container h2 {
+      font-size: 1.8em;
+      color: #2c6b2f;
+    }
+
+    .info-container p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .quiz-button {
+      background-color: #FF9900;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .quiz-button:hover {
+      background-color: #e68900;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Search by Symptoms</h1>
+    
+    <!-- Search Form -->
+    <form id="symptomSearchForm">
+      <input type="text" id="symptoms" name="symptoms" placeholder="Enter symptoms (e.g., headache, stress)" required>
+      <input type="submit" value="Search">
+    </form>
+
+    <!-- Plant Info Section -->
+    <div id="plantInfo" class="info-container" style="display: none;">
+      <h2>Possible Remedies</h2>
+      <p><strong>Plants that may help:</strong></p>
+      <ul id="plantList"></ul>
+    </div>
+  </div>
+
+  <script>
+    // Updated data for symptoms and their associated plants with Tamil names, general names, and intake methods
+    const symptomData = {
+      "headache": [
+        { name: "Pudina (Mint)", generalName: "Peppermint", intake: "Fresh leaves in tea or as an infusion for relief." },
+        { name: "Lavender", generalName: "Lavender", intake: "Inhalation of essential oil or use in a bath." },
+        { name: "Ilavu (Willow Bark)", generalName: "Willow Bark", intake: "Used as a tea to reduce inflammation and pain." }
+      ],
+      "stress": [
+        { name: "Thulasi (Holy Basil)", generalName: "Tulsi", intake: "Chewing fresh leaves or boiling in water to make tea." },
+        { name: "Ashwagandha", generalName: "Withania somnifera", intake: "Powdered root mixed with milk or honey for stress relief." },
+        { name: "Chamomile", generalName: "Chamomile", intake: "Tea made from dried chamomile flowers to calm the mind." }
+      ],
+      "insomnia": [
+        { name: "Valerian Root", generalName: "Valerian", intake: "As a tea or in capsule form before bedtime to induce sleep." },
+        { name: "Lavender", generalName: "Lavender", intake: "A few drops of lavender oil in a diffuser or pillow for relaxation." },
+        { name: "Passionflower", generalName: "Passionflower", intake: "Tea or tincture to reduce anxiety and improve sleep." }
+      ],
+      "digestive issues": [
+        { name: "Inji (Ginger)", generalName: "Ginger", intake: "Fresh ginger in tea or as a spice to aid digestion." },
+        { name: "Pudina (Mint)", generalName: "Peppermint", intake: "Mint tea or chewing fresh mint leaves for stomach relief." },
+        { name: "Saem (Fennel)", generalName: "Fennel", intake: "Fennel tea or chewing fennel seeds after meals to aid digestion." }
+      ],
+      "cold": [
+        { name: "Eucalyptus", generalName: "Eucalyptus", intake: "Steam inhalation or using eucalyptus oil to clear sinuses." },
+        { name: "Thulasi (Holy Basil)", generalName: "Tulsi", intake: "Tea made from boiled tulsi leaves for immunity." },
+        { name: "Inji (Ginger)", generalName: "Ginger", intake: "Ginger tea with honey to relieve cold symptoms." }
+      ],
+      "fever": [
+        { name: "Nim (Neem)", generalName: "Neem", intake: "Neem leaves boiled in water or as a juice to lower fever." },
+        { name: "Giloy (Heart-leaved Moonseed)", generalName: "Giloy", intake: "Giloy juice or capsules to boost immunity during fever." },
+        { name: "Chirayata", generalName: "Chirayata", intake: "Bitter decoction or as a capsule to reduce fever and detoxify the body." }
+      ],
+      "acne": [
+        { name: "Nim (Neem)", generalName: "Neem", intake: "Neem leaves paste applied topically or neem capsules for internal purification." },
+        { name: "Manjal (Turmeric)", generalName: "Turmeric", intake: "Turmeric powder applied topically or consumed in milk to reduce inflammation." },
+        { name: "Aloe Vera", generalName: "Aloe Vera", intake: "Fresh aloe vera gel applied topically for soothing and healing acne." }
+      ],
+      "cough": [
+        { name: "Athimadhuram (Liquorice)", generalName: "Liquorice (Mulethi)", intake: "Chewing on liquorice root or making tea from it for soothing the throat." },
+        { name: "Honey", generalName: "Honey", intake: "A spoonful of honey can help to soothe throat irritation and cough." },
+        { name: "Inji (Ginger)", generalName: "Ginger", intake: "Ginger tea or raw ginger with honey to relieve cough." }
+      ],
+      "anxiety": [
+        { name: "Chamomile", generalName: "Chamomile", intake: "Chamomile tea helps to reduce anxiety and promote relaxation." },
+        { name: "Ashwagandha", generalName: "Withania somnifera", intake: "Ashwagandha powder mixed with water or milk for calming effects." },
+        { name: "Lemongrass", generalName: "Lemongrass", intake: "Lemongrass tea helps to relieve anxiety and calm nerves." }
+      ],
+      "joint pain": [
+        { name: "Manjal (Turmeric)", generalName: "Turmeric", intake: "Turmeric powder with milk or as a paste for topical application to reduce pain." },
+        { name: "Salai (Boswellia)", generalName: "Boswellia (Indian Frankincense)", intake: "Boswellia capsules or extracts for pain relief." },
+        { name: "Inji (Ginger)", generalName: "Ginger", intake: "Ginger tea or ginger paste for topical application to relieve joint pain." }
+      ],
+      "diabetes": [
+        { name: "Paavaikaai (Bitter Gourd)", generalName: "Bitter Gourd", intake: "Bitter gourd juice or as a cooked vegetable to regulate blood sugar." },
+        { name: "Vendhayam (Fenugreek)", generalName: "Fenugreek", intake: "Fenugreek seeds soaked overnight or as powder mixed with water." },
+        { name: "Veppalai (Neem)", generalName: "Neem", intake: "Neem leaves juice or capsules to help manage blood sugar levels." }
+      ],
+      "immune boost": [
+        { name: "Nellikai (Indian Gooseberry)", generalName: "Amla", intake: "Amla juice or raw fruit to strengthen immunity." },
+        { name: "Echinacea", generalName: "Echinacea", intake: "Echinacea tea or supplements to enhance immune function." },
+        { name: "Tulasi (Holy Basil)", generalName: "Tulsi", intake: "Tulsi tea or consuming fresh leaves for immune support." }
+      ],
+      "skin inflammation": [
+        { name: "Kattrazhai", generalName: "Aloe Vera", intake: "Aloe vera gel applied topically for skin inflammation and irritation." },
+        { name: "Marigold (Calendula)", generalName: "Calendula", intake: "Calendula cream or ointment for soothing skin inflammation." },
+        { name: "Nim (Neem)", generalName: "Neem", intake: "Neem paste applied topically or neem capsules for skin healing." }
+      ],
+      "hair fall": [
+        { name: "Bhringraj", generalName: "Bhringraj", intake: "Bhringraj oil applied to the scalp for promoting hair growth." },
+        { name: "Amla (Indian Gooseberry)", generalName: "Amla", intake: "Amla powder or oil for scalp massage to prevent hair fall." },
+        { name: "Sembaruthi", generalName: "Hibiscus", intake: "Hibiscus flower paste or oil applied to hair for hair strengthening." }
+      ],
+      "menstrual pain": [
+        { name: "Inji (Ginger)", generalName: "Ginger", intake: "Ginger tea or ginger powder mixed with honey to relieve menstrual cramps." },
+        { name: "Vendhayam (Fenugreek)", generalName: "Fenugreek", intake: "Fenugreek seeds or tea for relief from menstrual pain." },
+        { name: "Ilavangapattai (Cinnamon)", generalName: "Cinnamon", intake: "Cinnamon tea for soothing menstrual cramps and improving circulation." }
+      ]
+    };
+
+    // Form submission logic
+    document.getElementById("symptomSearchForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      
+      const symptoms = document.getElementById("symptoms").value.trim().toLowerCase();
+
+      // Check if the entered symptoms match any in the symptomData object
+      const matchingPlants = symptomData[symptoms];
+
+      // Clear the previous results
+      const plantList = document.getElementById("plantList");
+      plantList.innerHTML = "";
+
+      if (matchingPlants) {
+        // Display the list of plants that may help
+        matchingPlants.forEach(plant => {
+          const listItem = document.createElement("li");
+          listItem.innerHTML = `<strong>${plant.name} (${plant.generalName})</strong>: ${plant.intake}`;
+          plantList.appendChild(listItem);
+        });
+
+        // Show the info container
+        document.getElementById("plantInfo").style.display = "block";
+      } else {
+        alert("No plants found for the entered symptoms. Please try another symptom.");
+      }
+    });
+  </script>
+
+</body>
+</html>

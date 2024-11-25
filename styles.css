@@ -1,0 +1,97 @@
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body background */
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background-image: url('https://media.istockphoto.com/id/475916925/photo/herb-garden.jpg?s=612x612&w=0&k=20&c=pXtdnTS0NFieEMixG8oiQcsd_4yDyJt6e-IRLGLVjfo='); /* Ensure the image is in the correct directory */
+  background-size: cover;
+  background-position: center;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container styling */
+.container {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 400px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  max-width: 600px;
+}
+
+/* Heading styling */
+h1 {
+  font-size: 2.5em;
+  color: #2c6b2f;
+  margin-bottom: 30px;
+}
+
+/* Button styles */
+.button, .quiz-button, input[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px 0;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  /* Removed the animation property */
+}
+
+/* Button hover effect */
+.button:hover, .quiz-button:hover, input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* Input field styles */
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Style for the last button (Grow a Plant on Your Own) */
+.button:last-child {
+  background-color: #ff9800;
+}
+
+/* Info container styling */
+.info-container {
+  margin-top: 20px;
+  text-align: left;
+}
+
+/* Style for selected option button */
+.options button.selected {
+  background-color: #45a049; /* Different color when selected */
+  pointer-events: none;  /* Disable further clicking */
+}
+
+/* Style for incorrect and correct answer buttons */
+.options button.correct {
+  background-color: #45a049; /* Green for correct answers */
+}
+
+.options button.incorrect {
+  background-color: #d9534f; /* Red for incorrect answers */
+}

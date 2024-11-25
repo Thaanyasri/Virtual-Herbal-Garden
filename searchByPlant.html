@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search by Plant Name - Virtual Herbal Garden</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background-image: url('https://media.istockphoto.com/id/475916925/photo/herb-garden.jpg?s=612x612&w=0&k=20&c=pXtdnTS0NFieEMixG8oiQcsd_4yDyJt6e-IRLGLVjfo=');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #2c6b2f;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .info-container {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .info-container p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .info-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .quiz-button {
+      background-color: #FF9900;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .quiz-button:hover {
+      background-color: #e68900;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Search by Plant Name</h1>
+    
+    <!-- Search Form -->
+    <form id="plantSearchForm">
+      <input type="text" id="plantName" name="plantName" placeholder="Enter plant name" required>
+      <input type="submit" value="Search">
+    </form>
+
+    <!-- Plant Info Section -->
+    <div id="plantInfo" class="info-container" style="display: none;">
+      <h2>Plant Information</h2>
+      <p><strong>Botanical Name:</strong> <span id="botanicalName"></span></p>
+      <p><strong>Benefits:</strong> <span id="plantBenefits"></span></p>
+      <p><strong>Medical Substance:</strong> <span id="medicalSubstance"></span></p>
+      <p><strong>Medicinal Part:</strong> <span id="medicinalPart"></span></p>
+      <img id="plantImage" src="" alt="Plant Image">
+      </div>
+  </div>
+
+  <script>
+    const plantData = {
+      "Tulsi": {
+        botanicalName: "Ocimum sanctum",
+        benefits: "Boosts immunity, fights infections, reduces stress",
+        medicalSubstance: "Eugenol, Rosmarinic acid",
+        medicinalPart: "Leaves",
+        image: "https://images.boldsky.com/img/2019/04/tulsi1-1555477773.jpg"
+      },
+      "Neem": {
+        botanicalName: "Azadirachta indica",
+        benefits: "Cleanses blood, treats acne, controls diabetes",
+        medicalSubstance: "Azadirachtin, Nimbin",
+        medicinalPart: "Leaves, Bark, Seeds",
+        image: "https://8billiontrees.com/wp-content/uploads/2023/12/Neem-Tree-Identification.png"
+      },
+      "Aloe Vera": {
+        botanicalName: "Aloe barbadensis miller",
+        benefits: "Heals wounds, aids digestion, moisturizes skin",
+        medicalSubstance: "Aloin, Emodin",
+        medicinalPart: "Leaves",
+        image: "https://ars.els-cdn.com/content/image/1-s2.0-S0254629922000813-gr1.jpg"
+      },
+      "Mint": {
+        botanicalName: "Mentha",
+        benefits: "Soothes digestion, relieves headaches, freshens breath",
+        medicalSubstance: "Menthol, Tannins",
+        medicinalPart: "Leaves",
+        image: "https://therike.com/cdn/shop/files/mint-leaves-1_480x480.webp"
+      },
+      "Ashwagandha": {
+        botanicalName: "Withania somnifera",
+        benefits: "Reduces stress, boosts energy, enhances memory",
+        medicalSubstance: "Withanolides, Alkaloids",
+        medicinalPart: "Root",
+        image: "https://jpionline.org/article/32213/?download_image=https://cdn.emanuscript.tech/jphi/v13/IntJPharmInvestigation-13-3-393_f001.jpg"
+      },
+      "Basil": {
+        botanicalName: "Ocimum basilicum",
+        benefits: "Anti-inflammatory, supports heart health, improves digestion",
+        medicalSubstance: "Eugenol, Linalool",
+        medicinalPart: "Leaves",
+        image: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Ocimum_basilicum_Basilikum.JPG"
+      },
+      "Ginger": {
+        botanicalName: "Zingiber officinale",
+        benefits: "Reduces nausea, improves digestion, fights cold symptoms",
+        medicalSubstance: "Gingerol, Shogaol",
+        medicinalPart: "Rhizome",
+        image: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Ginger_crop.jpg"
+      },
+      "Turmeric": {
+        botanicalName: "Curcuma longa",
+        benefits: "Anti-inflammatory, boosts immunity, improves skin health",
+        medicalSubstance: "Curcumin, Turmerone",
+        medicinalPart: "Rhizome",
+        image: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Turmeric_rhizome.jpg"
+      },
+      "Lemongrass": {
+        botanicalName: "Cymbopogon",
+        benefits: "Reduces anxiety, aids digestion, relieves pain",
+        medicalSubstance: "Citral, Myrcene",
+        medicinalPart: "Leaves",
+        image: "https://upload.wikimedia.org/wikipedia/commons/9/94/Lemongrass_field.jpg"
+      },
+      "Fenugreek": {
+        botanicalName: "Trigonella foenum-graecum",
+        benefits: "Improves digestion, reduces cholesterol, controls diabetes",
+        medicalSubstance: "Saponins, Flavonoids",
+        medicinalPart: "Seeds",
+        image: "https://upload.wikimedia.org/wikipedia/commons/e/e5/Fenugreek_seeds.jpg"
+      }
+    };
+
+    document.getElementById("plantSearchForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+            const plantName = document.getElementById("plantName").value.trim().toLowerCase();
+      const plantInfoDiv = document.getElementById("plantInfo");
+
+      // Find the plant data by matching the name
+      const matchingPlant = Object.keys(plantData).find(plant =>
+        plant.toLowerCase() === plantName
+      );
+
+      if (matchingPlant) {
+        const plantDetails = plantData[matchingPlant];
+
+        // Populate the plant information in the designated fields
+        document.getElementById("botanicalName").textContent = plantDetails.botanicalName;
+        document.getElementById("plantBenefits").textContent = plantDetails.benefits;
+        document.getElementById("medicalSubstance").textContent = plantDetails.medicalSubstance;
+        document.getElementById("medicinalPart").textContent = plantDetails.medicinalPart;
+        document.getElementById("plantImage").src = plantDetails.image;
+
+        // Display the plant info section
+        plantInfoDiv.style.display = "block";
+      } else {
+        // If the plant is not found, show an alert and hide the info section
+        alert("Plant not found. Please check the spelling or try another plant.");
+        plantInfoDiv.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
+

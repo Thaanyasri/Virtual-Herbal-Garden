@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Virtual Herbal Garden</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Sign Up</h1>
+    <form id="signupForm">
+      <input type="text" id="signupName" placeholder="Enter your name" required>
+      <input type="email" id="signupEmail" placeholder="Enter your email" required>
+      <input type="password" id="signupPassword" placeholder="Enter your password" required>
+      <input type="submit" value="Sign Up">
+    </form>
+    <p>Already have an account? <a href="login.html">Login</a></p>
+  </div>
+  <script>
+    document.getElementById("signupForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      // Dummy validation for sign-up
+      const name = document.getElementById("signupName").value;
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      if (name && email && password) {
+        alert("Sign-Up successful! Redirecting to login page...");
+        window.location.href = "login.html";
+      } else {
+        alert("Please fill in all the fields.");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Plant Image</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 10vh;
+      background-color: #f2f8f5;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #2c6b2f;
+    }
+
+    input[type="file"] {
+      margin: 20px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .info-container {
+      margin-top: 20px;
+      text-align: left;
+      display: none; /* Initially hidden */
+    }
+
+    .info-container h2 {
+      color: #2c6b2f;
+    }
+
+    .info-container p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .image-preview {
+      margin: 20px auto;
+      display: block;
+      max-width: 100%;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Upload Plant Image</h1>
+    <form id="imageUploadForm">
+      <!-- Image Preview Section -->
+      <img id="imagePreview" class="image-preview" style="display:none;" alt="Preview of uploaded image">
+
+      <!-- Image Upload Input -->
+      <input type="file" accept="image/*" id="plantImage" required>
+      <button type="submit">Identify Plant</button>
+    </form>
+
+    <!-- Plant Info Section -->
+    <div id="plantInfo" class="info-container">
+      <h2>Plant Information</h2>
+      <p><strong>Plant Name:</strong> <span id="plantName"></span></p>
+      <p><strong>Botanical Name:</strong> <span id="botanicalName"></span></p>
+      <p><strong>Benefits:</strong> <span id="plantBenefits"></span></p>
+    </div>
+  </div>
+
+  <script>
+    // Simulated backend response for plant identification
+    const plantData = {
+      "Tulsi": {
+        botanicalName: "Ocimum sanctum",
+        benefits: "Boosts immunity, fights infections, reduces stress"
+      },
+      "Neem": {
+        botanicalName: "Azadirachta indica",
+        benefits: "Cleanses blood, treats acne, controls diabetes"
+      },
+      "Aloe Vera": {
+        botanicalName: "Aloe barbadensis miller",
+        benefits: "Heals wounds, aids digestion, moisturizes skin"
+      }
+    };
+
+    // Show image preview
+    const imageInput = document.getElementById("plantImage");
+    const imagePreview = document.getElementById("imagePreview");
+
+    imageInput.addEventListener("change", () => {
+      const file = imageInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          imagePreview.src = e.target.result;
+          imagePreview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      } else {
+        imagePreview.style.display = "none";
+      }
+    });
+
+    // Handle form submission
+    document.getElementById("imageUploadForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      // Simulating plant detection logic
+      if (imageInput.files && imageInput.files[0]) {
+        // Simulating a detected plant name from the uploaded image
+        const detectedPlant = "Tulsi"; // Replace this with actual API or ML model detection
+
+        // Retrieve plant info
+        const plantInfo = plantData[detectedPlant];
+
+        if (plantInfo) {
+          document.getElementById("plantName").textContent = detectedPlant;
+          document.getElementById("botanicalName").textContent = plantInfo.botanicalName;
+          document.getElementById("plantBenefits").textContent = plantInfo.benefits;
+
+          // Show the plant info container
+          document.getElementById("plantInfo").style.display = "block";
+        } else {
+          alert("Plant information not found.");
+        }
+      } else {
+        alert("Please upload an image.");
+      }
+    });
+  </script>
+</body>
+</html>
